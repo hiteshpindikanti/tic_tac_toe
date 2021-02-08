@@ -2,13 +2,14 @@ import numpy as np
 
 
 class TicTacToe:
-    def __init__(self, start_player: str = 'O', game_state: np.array = None):
+    def __init__(self, start_player: str = 'O', alpha_beta_pruning=True, game_state: np.array = None):
         if game_state is None:
             self.game_state = np.array([['.']*3 for _ in range(3)])
         else:
             self.game_state = game_state
         self.symbols = {'X': 1, 'O': 0, '.': float('inf')}
         self.player = start_player
+        self.alpha_beta_pruning = alpha_beta_pruning
         self.computations_counter = None
         self.minimax()
 
@@ -147,7 +148,7 @@ class TicTacToe:
 
             if self.player == 'O':
                 self.computations_counter = self.count_computations()
-                (_, (row, column)) = self.__max_alpha_beta()
+                (_, (row, column)) = self.__max_alpha_beta() if self.alpha_beta_pruning else self.__max()
                 print("Computer's Move: ({}, {}), after doing {} computations"
                       .format(row, column, next(self.computations_counter)))
                 self.game_state[row, column] = 'O'
