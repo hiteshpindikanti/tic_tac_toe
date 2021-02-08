@@ -15,17 +15,30 @@ class TicTacToe:
 
     @staticmethod
     def count_computations():
+        """
+        A Counter to count number of computations
+        :return:
+        """
         count = 0
         while True:
             count += 1
             yield count
 
     def get_available_moves(self) -> list:
+        """
+        This method will calculated the available moves in the game board,
+        and return them in a list of tuples
+        :return:
+        """
         available_moves = np.where(self.game_state == '.')
         available_moves = [(available_moves[0][i], available_moves[1][i]) for i in range(available_moves[0].size)]
         return available_moves
 
     def get_game_result(self) -> str:
+        """
+        This method will calculate the game's result by checking the current game state
+        :return: str ('O' : Computer wins; 'X' : Human Wins; '.' : Game Draw; '?' : Undecidable)
+        """
         numerical_game_map = np.array(list(map(lambda i: [self.symbols[j] for j in i], self.game_state)))
 
         horizontal_sum = numerical_game_map.sum(axis=1)  # Horizontal
@@ -49,6 +62,10 @@ class TicTacToe:
             return '?'
 
     def __max(self) -> tuple:
+        """
+        Maximizing Function
+        :return: a tuple containing cost of the best move and the move's position (value, (row, column))
+        """
         available_moves = self.get_available_moves()
         s = self.get_game_result()
         if s == 'X':
@@ -68,6 +85,10 @@ class TicTacToe:
         return max_value
 
     def __min(self) -> tuple:
+        """
+        Minimizing Function
+        :return: a tuple containing cost of the best move and the move's position (value, (row, column))
+        """
         available_moves = self.get_available_moves()
         s = self.get_game_result()
         if s == 'X':
@@ -86,7 +107,13 @@ class TicTacToe:
             self.game_state[move[0], move[1]] = '.'  # Undo move
         return min_value
 
-    def __max_alpha_beta(self, alpha=float('-inf'), beta=float('inf')):
+    def __max_alpha_beta(self, alpha=float('-inf'), beta=float('inf')) -> tuple:
+        """
+        Maximizing Function with alpha beta pruning
+        :param alpha: maximum available value of Maximizing player. Default: -infinity
+        :param beta: minimum available value of Minimizing player. Default: +infinity
+        :return: a tuple containing cost of the best move and the move's position (value, (row, column))
+        """
         available_moves = self.get_available_moves()
         s = self.get_game_result()
         if s == 'X':
@@ -109,7 +136,13 @@ class TicTacToe:
 
         return max_value
 
-    def __min_alpha_beta(self, alpha=float('-inf'), beta=float('inf')):
+    def __min_alpha_beta(self, alpha=float('-inf'), beta=float('inf')) -> tuple:
+        """
+        Minimizing Function with alpha beta pruning
+        :param alpha: maximum available value of Maximizing player. Default: -infinity
+        :param beta: minimum available value of Minimizing player. Default: +infinity
+        :return: a tuple containing cost of the best move and the move's position (value, (row, column))
+        """
         available_moves = self.get_available_moves()
         s = self.get_game_result()
         if s == 'X':
@@ -133,6 +166,10 @@ class TicTacToe:
         return min_value
 
     def minimax(self):
+        """
+        Minimax function - the driver function for the game
+        :return: None
+        """
         while True:
             print(self.game_state)
             result = self.get_game_result()
